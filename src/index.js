@@ -3,15 +3,20 @@ import ReactDOM from 'react-dom/client';
 import { App } from 'components/App';
 import './index.css';
 import { Provider } from 'react-redux';
-import { persistor, store } from 'store/store';
-import { PersistGate } from 'redux-persist/integration/react';
+import { store } from 'store/store';
+import { BrowserRouter } from 'react-router-dom';
+import { Global, ThemeProvider } from '@emotion/react';
+import { GlobalStyles, theme } from 'styles';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-            <React.StrictMode>
-                <App />
-            </React.StrictMode>
-        </PersistGate>
+        <React.StrictMode>
+            <BrowserRouter basename="/goit-react-hw-07-phonebook">
+                <ThemeProvider theme={theme}>
+                    <Global styles={GlobalStyles} />
+                    <App />
+                </ThemeProvider>
+            </BrowserRouter>
+        </React.StrictMode>
     </Provider>
 );

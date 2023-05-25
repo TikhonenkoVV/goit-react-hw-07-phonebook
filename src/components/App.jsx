@@ -1,19 +1,23 @@
-import { ContactForm } from './Contact-form/ContactForm';
-import { Filter } from './Filter/Filter';
-import { ContactList } from './Contact-list/ContactList';
-import { Container, TitleMajor, TitleMinor } from './App.styled';
-import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import { Layout } from './Layout/Layout';
+import { lazy } from 'react';
+
+const Home = lazy(() => import('../Pages/Home'));
+const Contact = lazy(() => import('../Pages/Contact'));
+const EditForm = lazy(() => import('../Pages/Edit'));
+const New = lazy(() => import('../Pages/New'));
 
 export const App = () => {
     return (
-        <Container>
-            <TitleMajor>Phonebook</TitleMajor>
-            <ContactForm />
-            <TitleMinor>Contacts</TitleMinor>
-            <Filter />
-            <ContactList />
-            <ToastContainer />
-        </Container>
+        <Routes>
+            <Route path="/" element={<Layout />}>
+                <Route index element={<Home />} />
+                <Route path="new" element={<New />} />
+                <Route path="contact/:contactId" element={<Contact />} />
+                <Route path="contact/:contactId/edit" element={<EditForm />} />
+            </Route>
+            <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
     );
 };

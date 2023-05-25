@@ -1,26 +1,43 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { nanoid } from 'nanoid';
-import { persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
+import { hendleFetchContact } from './operations';
 
 const initialState = {
-    contacts: [],
+    contactsArray: [],
+    isLoading: false,
+    error: null,
 };
 
 const contactsSlice = createSlice({
     name: 'contacts',
     initialState,
     reducers: {
+        fetchProcess: state => {
+            state.isLoading = true;
+        },
+        fetchProcessSuccess: {
+            reducer(state, action) {
+                state.isLoading = false;
+                state.error = null;
+                state.contacts = action.payload;
+            },
+            prepare: payload => ({ payload }),
+        },
+        fetchProcessReject: (state, action) => {
+            state.isLoading = false;
+            state.error = action.payload;
+        },
         addContact: {
             reducer(state, action) {
                 state.contacts.push(action.payload);
             },
-            prepare({ name, number }) {
+            prepare({ name, surname, number, email, photo }) {
                 return {
                     payload: {
                         name,
+                        surname,
                         number,
-                        id: nanoid(),
+                        email,
+                        photo,
                     },
                 };
             },
@@ -34,19 +51,28 @@ const contactsSlice = createSlice({
             },
         },
     },
+    extraReducers: builder => {
+        builder.addCase(hendleFetchContact.pending, state => {
+            state.isLoading = true;
+        });
+        builder.addCase(hendleFetchContact.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.error = null;
+            state.contactsArray = action.payload;
+        });
+        builder.addCase(hendleFetchContact.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error = action.payload;
+        });
+    },
 });
 
-const persistConfig = {
-    key: 'contacts',
-    storage,
-    whitelist: ['contacts'],
-};
+export const contactsReducer = contactsSlice.reducer;
 
-export const contactsReducer = persistReducer(
-    persistConfig,
-    contactsSlice.reducer
-);
-
-export const { addContact, deleteContact } = contactsSlice.actions;
-
-// export const { contactsReducer } = contactsSlice.reducer;
+export const {
+    fetchProcess,
+    fetchProcessSuccess,
+    fetchProcessReject,
+    addContact,
+    deleteContact,
+} = contactsSlice.actions;
