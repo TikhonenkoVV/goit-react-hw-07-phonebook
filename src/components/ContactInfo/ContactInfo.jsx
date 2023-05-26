@@ -1,52 +1,52 @@
 import defaultPhoto from '../../img/avatar-default.png';
 import {
-    BtnWrapper,
     ContactCard,
     ContactTitle,
     Details,
     DetailsItem,
+    DetailsTitle,
     DetailsWrapper,
     LinkStyled,
     Photo,
     PhotoWrapper,
 } from './ContactInfo.styled';
-import { Link, useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Svg } from 'components/icon/Icon';
 import sprite from '../../img/icons.svg';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { hendleFetchContactById } from 'store/operations';
+import { selectContact } from 'store/selector';
 
 export const ContactInfo = () => {
-    const location = useLocation();
+    const dispatch = useDispatch();
+    const { contactId } = useParams();
+    const { name, surname, number, email, img } = useSelector(selectContact);
+    const fullName = `${name} ${surname}`.trim();
+
+    useEffect(() => {
+        dispatch(hendleFetchContactById(contactId));
+    }, [dispatch, contactId]);
+
     return (
         <ContactCard>
             <PhotoWrapper>
                 <LinkStyled to={'/'}>
                     <Svg w={20} h={20} use={`${sprite}#icon-close`} />
                 </LinkStyled>
-                <BtnWrapper>
-                    <Link to={`edit`} state={{ from: location }}>
-                        <Svg w={20} h={20} use={`${sprite}#icon-pencil`}></Svg>
-                    </Link>
-                    <Link>
-                        <Svg
-                            w={20}
-                            h={20}
-                            use={`${sprite}#icon-del-contact`}
-                        ></Svg>
-                    </Link>
-                </BtnWrapper>
-                <Photo src={defaultPhoto} alt="Contact photo" />
+                <Photo src={img !== '' ? img : defaultPhoto} alt="" />
             </PhotoWrapper>
-            <ContactTitle>Contact name</ContactTitle>
+            <ContactTitle>{fullName}</ContactTitle>
             <DetailsWrapper>
-                <h3>Contact info</h3>
+                <DetailsTitle>Contact info</DetailsTitle>
                 <Details>
                     <DetailsItem>
                         <p>Phone:</p>
-                        <a href="tel:+1234567890">+11234567890</a>
+                        <a href="tel:+1234567890">{number}</a>
                     </DetailsItem>
                     <DetailsItem>
                         <p>E-mail:</p>
-                        <a href="mailto:ford@gmail.com">ford@gmail.com</a>
+                        <a href="mailto:ford@gmail.com">{email}</a>
                     </DetailsItem>
                 </Details>
             </DetailsWrapper>

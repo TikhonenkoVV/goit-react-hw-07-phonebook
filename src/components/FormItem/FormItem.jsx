@@ -5,9 +5,12 @@ import sprite from '../../img/icons.svg';
 import { toCapitalize } from 'services/tocapitalize';
 
 export const FormItem = ({ name, type, onChange, use }) => {
+    let normalName = name;
+    if (name === 'email') normalName = 'e-mail';
+    const ph = `Enter ${normalName}`;
     return (
         <Label>
-            {toCapitalize(name)}
+            {toCapitalize(normalName)}
             <InputWrapper>
                 <Ico>
                     <Svg w={23} h={23} use={`${sprite}#icon-${use}`} />
@@ -15,7 +18,7 @@ export const FormItem = ({ name, type, onChange, use }) => {
                 <Input
                     type={type}
                     name={name}
-                    placeholder="Enter contact name"
+                    placeholder={ph}
                     onChange={onChange}
                 />
             </InputWrapper>

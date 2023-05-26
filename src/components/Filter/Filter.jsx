@@ -11,7 +11,7 @@ export const Filter = () => {
 
     return (
         <Input
-            type="text"
+            type="search"
             name="name"
             placeholder="Enter contact name"
             value={filter}

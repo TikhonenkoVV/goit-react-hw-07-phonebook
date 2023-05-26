@@ -5,7 +5,6 @@ import { lazy } from 'react';
 
 const Home = lazy(() => import('../Pages/Home'));
 const Contact = lazy(() => import('../Pages/Contact'));
-const EditForm = lazy(() => import('../Pages/Edit'));
 const New = lazy(() => import('../Pages/New'));
 
 export const App = () => {
@@ -15,7 +14,6 @@ export const App = () => {
                 <Route index element={<Home />} />
                 <Route path="new" element={<New />} />
                 <Route path="contact/:contactId" element={<Contact />} />
-                <Route path="contact/:contactId/edit" element={<EditForm />} />
             </Route>
             <Route path="*" element={<Navigate to="/" />} />
         </Routes>

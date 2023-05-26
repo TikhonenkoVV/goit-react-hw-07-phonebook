@@ -1,8 +1,6 @@
 import PropTypes from 'prop-types';
 import {
     BtnDel,
-    BtnEdit,
-    BtnWrapper,
     ContactLink,
     ContactListHeader,
     ContactListHeaderBox,
@@ -23,14 +21,13 @@ import { hendleDeleteContact, hendleFetchContact } from 'store/operations';
 
 export const ContactList = () => {
     const dispatch = useDispatch();
+    const list = useSelector(selectFilteredContacts);
 
     useEffect(() => {
         dispatch(hendleFetchContact());
     }, [dispatch]);
 
     const delContact = id => dispatch(hendleDeleteContact(id));
-
-    const list = useSelector(selectFilteredContacts);
 
     const location = useLocation();
     return (
@@ -56,7 +53,11 @@ export const ContactList = () => {
                                         >
                                             <NameWrapper>
                                                 <img
-                                                    src={avatar}
+                                                    src={
+                                                        img !== ''
+                                                            ? img
+                                                            : avatar
+                                                    }
                                                     alt="avatar"
                                                     width={30}
                                                     height={30}
@@ -66,25 +67,16 @@ export const ContactList = () => {
                                             <p>{number}</p>
                                             <p>{email}</p>
                                         </ContactLink>
-                                        <BtnWrapper>
-                                            <BtnEdit to={`/edit`}>
-                                                <Svg
-                                                    w={20}
-                                                    h={20}
-                                                    use={`${sprite}#icon-pencil`}
-                                                />
-                                            </BtnEdit>
-                                            <BtnDel
-                                                type="button"
-                                                onClick={() => delContact(id)}
-                                            >
-                                                <Svg
-                                                    w={20}
-                                                    h={20}
-                                                    use={`${sprite}#icon-del-contact`}
-                                                />
-                                            </BtnDel>
-                                        </BtnWrapper>
+                                        <BtnDel
+                                            type="button"
+                                            onClick={() => delContact(id)}
+                                        >
+                                            <Svg
+                                                w={20}
+                                                h={20}
+                                                use={`${sprite}#icon-del-contact`}
+                                            />
+                                        </BtnDel>
                                     </Item>
                                 );
                             }

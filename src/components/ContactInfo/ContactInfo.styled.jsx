@@ -15,20 +15,25 @@ export const LinkStyled = styled(Link)`
     position: absolute;
     top: 0;
     left: 0;
-`;
-
-export const BtnWrapper = styled.div`
-    position: absolute;
-    bottom: 0;
-    right: 0;
     display: flex;
-    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 4px;
+    background-color: ${props => props.theme.colors.btn};
+    transition: color 250ms;
+    &:hover,
+    &:focus {
+        color: ${props => props.theme.colors.hover};
+    }
 `;
 
 export const Photo = styled.img`
     display: block;
     width: 150px;
     aspect-ratio: 1;
+    object-fit: cover;
     margin: 0 auto;
     border-radius: 50%;
     background-color: #302b2b;
@@ -38,9 +43,11 @@ export const ContactTitle = styled.h2`
     margin-bottom: 20px;
     text-align: center;
 `;
+
 export const DetailsWrapper = styled.div`
     padding: 10px;
-    background-color: gray;
+    border: 1px solid gray;
+    border-radius: 4px;
 `;
 
 export const Details = styled.ul`
@@ -52,4 +59,15 @@ export const Details = styled.ul`
 export const DetailsItem = styled.li`
     display: flex;
     gap: 10px;
+    & a {
+        transition: color 250ms;
+        &:hover,
+        &:focus {
+            color: ${props => props.theme.colors.hover};
+        }
+    }
+`;
+
+export const DetailsTitle = styled.h3`
+    margin-bottom: 20px;
 `;

@@ -15,7 +15,7 @@ export const FirstElement = styled.p`
 export const ContactListHeaderBox = styled.div`
     display: grid;
     grid-template-columns: 2fr 1fr 1fr;
-    width: calc(100% - 80px);
+    width: calc(100% - 50px);
 `;
 
 export const List = styled.ul`
@@ -36,7 +36,7 @@ export const Item = styled.li`
 export const ContactLink = styled(Link)`
     display: grid;
     grid-template-columns: 2fr 1fr 1fr;
-    width: calc(100% - 80px);
+    width: calc(100% - 30px);
     transition: color 250ms;
     &:hover,
     &:focus {
@@ -48,25 +48,11 @@ export const NameWrapper = styled.div`
     display: flex;
     align-items: center;
     gap: 10px;
-`;
-
-export const BtnWrapper = styled.div`
-    display: flex;
-    gap: 10px;
-`;
-
-export const BtnEdit = styled(Link)`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 30px;
-    height: 30px;
-    border-radius: 4px;
-    background-color: ${props => props.theme.colors.btn};
-    transition: color 250ms;
-    &:hover,
-    &:focus {
-        color: ${props => props.theme.colors.hover};
+    & img {
+        width: 30px;
+        aspect-ratio: 1;
+        object-fit: cover;
+        border-radius: 50%;
     }
 `;
 

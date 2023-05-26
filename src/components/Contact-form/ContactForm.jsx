@@ -9,39 +9,42 @@ import { Formik } from 'formik';
 import { validationSchema } from 'services/validate-schema';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { selectContacts } from 'store/selector';
+import { selectContacts, selectCurrentImg } from 'store/selector';
 import sprite from '../../img/icons.svg';
 import { Svg } from 'components/icon/Icon';
 import { useRef, useState } from 'react';
 import defaultPhoto from '../../img/avatar-default.png';
 import { FormItem } from 'components/FormItem/FormItem';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { fbStorage } from '../../services/fireBase';
-import { ref, uploadBytes } from 'firebase/storage';
-import { hendleAddContact } from 'store/operations';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { setCurrentImg } from 'store/contactsSlice';
 
-export const ContactForm = () => {
-    const dispatch = useDispatch();
+export const ContactForm = ({ onSetState }) => {
     const contacts = useSelector(selectContacts);
+    const currImg = useSelector(selectCurrentImg);
+    const navigate = useNavigate();
+    const currentImg = useDispatch();
 
     const [contactImg, setContactImg] = useState(defaultPhoto);
-    const [uploadImg, setUploadImg] = useState(null);
     const addImg = useRef();
 
-    const hendleUploadImg = () => {
-        if (!uploadImg) return;
-        const imgRef = ref(fbStorage, `images/${uploadImg.name}`);
-        uploadBytes(imgRef, uploadImg).then(res => {
-            console.log(res);
+    const hendleUploadImg = photo => {
+        const imgRef = ref(fbStorage, `images/${photo.name}`);
+        uploadBytes(imgRef, photo).then(res => {
+            getDownloadURL(ref(fbStorage, res.metadata.fullPath)).then(url => {
+                currentImg(setCurrentImg(url));
+                console.log(url);
+            });
         });
     };
 
-    const hendleChange = e => {
+    const hendleFileChange = e => {
         const photo = e.target.files[0];
-        setUploadImg(photo);
         const reader = new FileReader();
         reader.readAsDataURL(photo);
         reader.onload = () => setContactImg(reader.result);
+        hendleUploadImg(photo);
     };
 
     const location = useLocation();
@@ -59,7 +62,10 @@ export const ContactForm = () => {
             }}
             onSubmit={(values, { resetForm }) => {
                 const isNameExist = contacts.find(
-                    val => val.name.toLowerCase() === values.name.toLowerCase()
+                    val =>
+                        val.name.toLowerCase() === values.name.toLowerCase() &&
+                        val.surname.toLowerCase() ===
+                            values.surname.toLowerCase()
                 );
                 const isNumberExist = contacts.find(
                     val => val.number === values.number
@@ -74,9 +80,11 @@ export const ContactForm = () => {
                     );
                     return;
                 }
-                hendleUploadImg();
-                dispatch(hendleAddContact(values));
+                values.img = currImg;
+                console.log(values);
+                onSetState(values);
                 resetForm();
+                navigate('/');
             }}
         >
             {({ handleSubmit, handleChange }) => {
@@ -95,13 +103,13 @@ export const ContactForm = () => {
                                 id="img"
                                 name="img"
                                 type="file"
-                                onChange={hendleChange}
+                                accept="image/jpeg"
+                                onChange={hendleFileChange}
                             />
                             <PhotoLabel
                                 htmlFor={'img'}
                                 file={contactImg}
                             ></PhotoLabel>
-                            <h1>Contact name</h1>
                             <FormItem
                                 type="text"
                                 name="name"
