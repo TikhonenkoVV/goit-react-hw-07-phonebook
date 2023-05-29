@@ -10,13 +10,13 @@ import { GlobalStyles, theme } from 'styles';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <Provider store={store}>
-        <React.StrictMode>
-            <BrowserRouter basename="/goit-react-hw-07-phonebook">
-                <ThemeProvider theme={theme}>
-                    <Global styles={GlobalStyles} />
-                    <App />
-                </ThemeProvider>
-            </BrowserRouter>
-        </React.StrictMode>
+        {/* <React.StrictMode> */}
+        <BrowserRouter basename="/goit-react-hw-07-phonebook">
+            <ThemeProvider theme={theme}>
+                <Global styles={GlobalStyles} />
+                <App />
+            </ThemeProvider>
+        </BrowserRouter>
+        {/* </React.StrictMode> */}
     </Provider>
 );
