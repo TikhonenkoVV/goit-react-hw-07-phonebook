@@ -63,14 +63,21 @@ const contactsSlice = createSlice({
             .addCase(hendleEditContact.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.error = null;
-                const i = state.contactsArray.findIndex(
-                    contact => contact.id === action.payload.id
+                const newArray = [];
+                state.contactsArray.map(el =>
+                    el.id === action.payload.id
+                        ? newArray.push(action.payload)
+                        : newArray.push(el)
                 );
-                state.contactsArray[i].name = action.payload.name;
-                state.contactsArray[i].surname = action.payload.surname;
-                state.contactsArray[i].number = action.payload.number;
-                state.contactsArray[i].email = action.payload.email;
-                state.contactsArray[i].img = action.payload.img;
+                state.contactsArray = newArray;
+                // const i = state.contactsArray.findIndex(
+                //     contact => contact.id === action.payload.id
+                // );
+                // state.contactsArray[i].name = action.payload.name;
+                // state.contactsArray[i].surname = action.payload.surname;
+                // state.contactsArray[i].number = action.payload.number;
+                // state.contactsArray[i].email = action.payload.email;
+                // state.contactsArray[i].img = action.payload.img;
             })
             .addCase(hendleEditContact.rejected, (state, action) => {
                 state.isLoading = false;
